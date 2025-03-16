@@ -35,16 +35,12 @@ public class MaximumValueArithmeticExpression {
         }
 
         public Value operator(Value value, String operator) {
-            switch (operator) {
-                case "+":
-                    return sum(value);
-                case "-":
-                    return sub(value);
-                case "*":
-                    return mult(value);
-                default:
-                    throw new IllegalArgumentException("Invalid operator: " + operator);
-            }
+            return switch (operator) {
+                case "+" -> sum(value);
+                case "-" -> sub(value);
+                case "*" -> mult(value);
+                default -> throw new IllegalArgumentException("Invalid operator: " + operator);
+            };
         }
 
         public Value sum(Value value) {
@@ -79,10 +75,8 @@ public class MaximumValueArithmeticExpression {
 
         @Override
         public String toString() {
-            return "(" +
-                    "min=" + minValue +
-                    " ; max=" + maxValue +
-                    ')';
+            return "(min=" + minValue +
+                    " ; max=" + maxValue + ')';
         }
     }
 
@@ -107,7 +101,7 @@ public class MaximumValueArithmeticExpression {
     public void setExpression(String expression) {
         this.expression = expression;
 
-        tokens = extractTokens(expression);
+        tokens = extractTokens(this.expression);
         numbers = new Integer[tokens.length / 2 + 1];
         operators = new String[tokens.length / 2];
 
@@ -115,25 +109,20 @@ public class MaximumValueArithmeticExpression {
             throw new IllegalArgumentException("Expression must contain an odd number of operands. Now is empty");
         } else if (tokens.length == 1) {
             result = Long.parseLong(tokens[0]);
-            return;
         } else if (tokens.length % 2 == 0) {
             throw new IllegalArgumentException("Expression must contain an odd number of operands");
         } else if (tokens.length == 3) {
             Value value1 = new Value(Long.parseLong(tokens[0]));
             Value value2 = new Value(Long.parseLong(tokens[2]));
             result = value1.operator(value2, tokens[1]).minValue;
-            return;
         } else {
             dp = new Value[numbers.length][numbers.length];
             result = null;
-            return;
         }
     }
 
     private void printResult() {
-
         System.out.println(result);
-
     }
 
     public MaximumValueArithmeticExpression solve() {
@@ -144,7 +133,8 @@ public class MaximumValueArithmeticExpression {
         processPrincipalDiag();
         processSecondDiag();
         processOtherDiag();
-        result = this.dp[0][dp.length-1].maxValue;
+
+        result = this.dp[0][dp.length - 1].maxValue;
         return this;
     }
 
@@ -177,11 +167,8 @@ public class MaximumValueArithmeticExpression {
     }
 
     private MaximumValueArithmeticExpression read() {
-
         Scanner sc = new Scanner(System.in);
-
         setExpression(sc.nextLine().trim());
-
         return this;
     }
 
@@ -223,7 +210,7 @@ public class MaximumValueArithmeticExpression {
             tokens.add(sb.toString());
         }
 
-        return tokens.stream().filter(s-> !s.isBlank()).toArray(String[]::new);
+        return tokens.stream().filter(s -> !s.isBlank()).toArray(String[]::new);
     }
 }
 

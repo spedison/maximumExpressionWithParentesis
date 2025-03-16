@@ -2,8 +2,6 @@ package br.com.spedison;
 
 import java.util.Arrays;
 
-import java.util.Arrays;
-
 public class Permutate {
     private int[] index;   // Índices fixos representando as posições
     private int[] counters; // Contadores do Algoritmo de Heap
